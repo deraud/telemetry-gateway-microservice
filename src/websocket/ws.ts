@@ -2,11 +2,7 @@ import { WebSocketServer, WebSocket } from "ws";
 import { Server } from "http";
 
 import { authenticateClient } from "./auth";
-import { handleSubscriptionMessage } from "./subscription";
-
-const clientSubscriptions = new Map<WebSocket,
-  { type: "all" | "device"; deviceId?: string }
->();
+import { handleSubscriptionMessage, clientSubscriptions } from "./subscription";
 
 export function createWebSocketServer(httpServer: Server) {
 
@@ -41,5 +37,3 @@ export function createWebSocketServer(httpServer: Server) {
 
   return wss;
 }
-
-export { clientSubscriptions };
