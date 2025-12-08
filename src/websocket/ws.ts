@@ -5,6 +5,8 @@ import { authenticateClient } from "./auth";
 import { handleSubscriptionMessage, clientSubscriptions } from "./subscription";
 import { subscribe } from "../events/bus";
 import { broadcastTelemetry } from "./broadcast";
+import { broadcastAlert } from "./alert";
+
 
 export function createWebSocketServer(httpServer: Server) {
 
@@ -15,6 +17,10 @@ export function createWebSocketServer(httpServer: Server) {
 
   subscribe("telemetry", ({ deviceId, data }) => {
     broadcastTelemetry(deviceId, data);
+  });
+
+  subscribe("alert", ({ deviceId, alert }) => {
+    broadcastAlert(deviceId, alert);
   });
 
   wss.on("connection", (ws, request) => {
