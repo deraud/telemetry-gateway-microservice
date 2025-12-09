@@ -7,6 +7,8 @@ import { subscribe } from "../events/bus";
 import { broadcastTelemetry } from "./broadcast";
 import { broadcastAlert } from "./alert";
 
+export let wss: WebSocketServer;
+
 export function createWebSocketServer(httpServer: Server) {
 
   const wss = new WebSocketServer({

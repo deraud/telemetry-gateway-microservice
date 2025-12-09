@@ -1,6 +1,8 @@
 import mqtt from "mqtt";
 import { handleMqttMessage } from "./message";
 
+export let client: mqtt.MqttClient;
+
 export function startMqttClient() {
   const brokerUrl = process.env.MQTT_URL || "mqtt://localhost:1883";
 
@@ -21,4 +23,6 @@ export function startMqttClient() {
   client.on("error", (err) => {
     console.error("MQTT Error:", err);
   });
+
+  return client
 }
