@@ -1,6 +1,7 @@
 import { Server } from "http";
 import { WebSocketServer } from "ws";
 import { Pool } from "pg";
+import { logger } from "./utils/logger";
 import mqtt from "mqtt";
 
 export function setupGracefulShutdown(
@@ -10,12 +11,12 @@ export function setupGracefulShutdown(
   pool: Pool
 ) {
   async function shutdown() {
-    console.log("Shutting down gracefully...");
+    logger.info("Shutting down gracefully...");
 
     // Close HTTP 
     await new Promise<void>((resolve) => {
       httpServer.close(() => {
-        console.log("HTTP server closed.");
+        logger.info("HTTP server closed.");
         resolve();
       });
     });
@@ -24,7 +25,7 @@ export function setupGracefulShutdown(
     await new Promise<void>((resolve) => {
       wss.clients.forEach((client) => client.close());
       wss.close(() => {
-        console.log("WebSocket server closed.");
+        logger.info("WebSocket server closed.");
         resolve();
       });
     });
@@ -32,16 +33,16 @@ export function setupGracefulShutdown(
     // Close MQTT
     await new Promise<void>((resolve) => {
       mqttClient.end(true, () => {
-        console.log("MQTT client disconnected.");
+        logger.warn("MQTT client disconnected.");
         resolve();
       });
     });
 
     // Close PostgreSQL pool
     await pool.end();
-    console.log("PostgreSQL pool closed.");
+    logger.info("PostgreSQL pool closed.");
 
-    console.log("Shutdown complete.");
+    logger.info("Shutdown complete.");
     process.exit(0);
   }
 

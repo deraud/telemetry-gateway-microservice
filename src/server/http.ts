@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { listDevices } from "../db/devicesRepo";
 import { getTelemetryForDevice } from "../db/telemetryQuery";
+import { logger } from "../utils/logger";
 
 export function createHttpServer() {
   const app = express();
@@ -18,7 +19,7 @@ export function createHttpServer() {
       const devices = await listDevices();
       res.json(devices);
     } catch (err) {
-      console.error("Error fetching devices:", err);
+      logger.error("Error fetching devices:", err);
       res.status(500).json({ error: "Failed to fetch devices" });
     }
   });
@@ -32,7 +33,7 @@ export function createHttpServer() {
       const telemetry = await getTelemetryForDevice(deviceId!, limit);
       res.json(telemetry);
     } catch (err) {
-      console.error("Error fetching telemetry:", err);
+      logger.error("Error fetching telemetry:", err);
       res.status(500).json({ error: "Failed to fetch telemetry" });
     }
   });

@@ -1,5 +1,6 @@
 import { subscribe, publish } from "../events/bus";
 import { saveAlert } from "../db/alert";
+import { logger } from "../utils/logger";
 
 export function startAlertProcessor() {
   
@@ -26,5 +27,5 @@ export function startAlertProcessor() {
     }
   });
 
-  console.log("Alert processor started");
+  logger.info("Alert processor started");
 }

@@ -8,6 +8,7 @@ import { startAlertProcessor } from "./alert/alert";
 import { startTelemetryListener } from "./telemetry/listener";
 import { setupGracefulShutdown } from "./shutdown";
 import { pool } from "./db/db";
+import { logger } from "./utils/logger";
 
 
 
@@ -25,8 +26,8 @@ startAlertProcessor();
 
 // Start the server
 httpServer.listen(PORT, () => {
-  console.log(`Server listening on http://localhost:${PORT}`);
-  console.log(`WebSocket listening on ws://localhost:${PORT}/ws`);
+  logger.info(`Server listening on http://localhost:${PORT}`);
+  logger.info(`WebSocket listening on ws://localhost:${PORT}/ws`);
 });
 
 // MQTT Client

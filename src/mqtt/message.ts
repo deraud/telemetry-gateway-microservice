@@ -1,6 +1,7 @@
 import { parseDeviceId } from "./parser";
 import { validateTelemetry } from "./payload";
 import { publish } from "../events/bus";
+import { logger } from "../utils/logger";
 
 export function handleMqttMessage(topic: string, payload: Buffer) {
   try {
@@ -14,8 +15,8 @@ export function handleMqttMessage(topic: string, payload: Buffer) {
       receivedAt: new Date(),
     });
 
-    console.log("Telemetry received:", validated);
+    logger.info("Telemetry received:", validated);
   } catch (err: any) {
-    console.error("MQTT Message Error:", err.message);
+    logger.error("MQTT Message Error:", err.message);
   }
 }
