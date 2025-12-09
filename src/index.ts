@@ -5,6 +5,7 @@ import { createHttpServer } from "./server/http";
 import { createWebSocketServer } from "./websocket/ws";
 import { startMqttClient } from "./mqtt/mqtt";
 import { startAlertProcessor } from "./alert/alert";
+import { startTelemetryListener } from "./telemetry/listener";
 
 
 
@@ -18,6 +19,7 @@ const app = createHttpServer();
 const httpServer = http.createServer(app);
 createWebSocketServer(httpServer);
 
+startTelemetryListener();
 startAlertProcessor();
 
 // Start the server

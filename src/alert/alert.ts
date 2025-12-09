@@ -1,6 +1,8 @@
 import { subscribe, publish } from "../events/bus";
+import { saveAlert } from "../db/alert";
 
 export function startAlertProcessor() {
+  
   subscribe("telemetry", ({ deviceId, data }) => {
     const alerts: any[] = [];
 
@@ -19,12 +21,10 @@ export function startAlertProcessor() {
     }
 
     for (const alert of alerts) {
-      publish("alert", {
-        deviceId,
-        alert,
-        timestamp: new Date(),
-      });
-      console.log("Alert:", alert);
+      publish("alert", { deviceId, alert });
+      saveAlert(deviceId, alert).catch(console.error);
     }
   });
+
+  console.log("Alert processor started");
 }

@@ -7,7 +7,6 @@ import { subscribe } from "../events/bus";
 import { broadcastTelemetry } from "./broadcast";
 import { broadcastAlert } from "./alert";
 
-
 export function createWebSocketServer(httpServer: Server) {
 
   const wss = new WebSocketServer({
@@ -40,9 +39,6 @@ export function createWebSocketServer(httpServer: Server) {
         ws.send(JSON.stringify({ error: "Invalid JSON format" }));
       }
     });
-
-
-
 
     ws.on("close", () => {
       clientSubscriptions.delete(ws);
