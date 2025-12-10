@@ -8,7 +8,7 @@ export function startMqttClient() {
   const brokerUrl = process.env.MQTT_URL || "mqtt://localhost:1883";
 
   logger.info("Connecting to MQTT broker:", brokerUrl);
-  const client = mqtt.connect(brokerUrl);
+  client = mqtt.connect(brokerUrl);
 
   client.on("connect", () => {
     logger.info("MQTT connected");
