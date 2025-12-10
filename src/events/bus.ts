@@ -6,7 +6,6 @@ export function subscribe(eventName: string, handler: EventHandler) {
   if (!listeners.has(eventName)) {
     listeners.set(eventName, []);
   }
-
   listeners.get(eventName)!.push(handler);
 }
 

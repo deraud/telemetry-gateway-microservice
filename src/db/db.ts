@@ -1,19 +1,30 @@
 import { Pool } from "pg";
 import { logger } from "../utils/logger";
+import { AppError } from "../error/appError";
+import { handleError } from "../error/errorHandler";
 
-console.log("Initializing PostgreSQL connection pool...");
+logger.info("Initializing PostgreSQL connection pool...");
 
 export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  idleTimeoutMillis: 0,
-  connectionTimeoutMillis: 0,
+  max: 10,                
+  idleTimeoutMillis: 10000,
+  connectionTimeoutMillis: 5000,
   keepAlive: true,
 });
 
+let connectedOnce = false;
+
 pool.on("connect", () => {
-  logger.info("Connected to PostgreSQL");
+  if (!connectedOnce) {
+    connectedOnce = true;
+    logger.info("PostgreSQL connection established");
+  }
 });
 
 pool.on("error", (err) => {
-  logger.info("PostgreSQL error:", err);
+  handleError(
+    new AppError(500, "DATABASE_ERROR", "PostgreSQL Database error", err),
+    { source: "db" }
+  );
 });
