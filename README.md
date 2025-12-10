@@ -39,6 +39,12 @@ Database and seeding by Docker initialization with TimescaleDB feature
   docker compose up --build
 ```
 Unit and mock testings are done with JEST
+
+
+Database design are as follows
+<img width="745" height="559" alt="image" src="https://github.com/user-attachments/assets/a8db8de4-0126-49e8-9294-a3b3568a6123" />
+
+
 ADDITIONAL: Some TimescaleDB to analyze seedings:
 ```
 SELECT
