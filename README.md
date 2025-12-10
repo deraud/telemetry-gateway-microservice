@@ -45,7 +45,8 @@ Database design are as follows
 <img width="745" height="559" alt="image" src="https://github.com/user-attachments/assets/a8db8de4-0126-49e8-9294-a3b3568a6123" />
 
 
-ADDITIONAL: Some TimescaleDB to analyze seedings:
+ADDITIONAL:
+1. Some TimescaleDB to analyze data:
 ```
 SELECT
   time_bucket('1 minute', received_at) AS bucket,
@@ -70,4 +71,5 @@ FROM telemetry
 GROUP BY bucket, device_id
 ORDER BY bucket DESC;
 ```
-
+2. Some improvements to be made:
+- Better error handling
