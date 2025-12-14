@@ -2,13 +2,14 @@ import { WebSocket } from "ws";
 import { AppError } from "../error/appError";
 import { handleError } from "../error/errorHandler";
 import { logger } from "../utils/logger";
+import { checkDeviceExists } from "../db/telemetry";
 
 export const clientSubscriptions = new Map<
   WebSocket,
   { type: "all" | "device"; deviceId?: string }
 >();
 
-export function handleSubscriptionMessage(ws: WebSocket, msg: any) {
+export async function handleSubscriptionMessage(ws: WebSocket, msg: any) {
   try {
 
     if (typeof msg !== "object" || msg === null) {
@@ -35,6 +36,7 @@ export function handleSubscriptionMessage(ws: WebSocket, msg: any) {
     }
 
     if (msg.type === "subscribe_device") {
+
       if (typeof msg.device_id !== "string") {
         throw new AppError(
           400,
@@ -43,7 +45,17 @@ export function handleSubscriptionMessage(ws: WebSocket, msg: any) {
           { msg }
         );
       }
+      const deviceExists = await checkDeviceExists(msg.device_id);
+      if (!deviceExists) {
+        throw new AppError(
+          400,
+          "INVALID_DEVICE_ID",
+          `Device ${msg.deviceId} not found`,
+          { msg }
+        );
+      }
 
+      
       clientSubscriptions.set(ws, {
         type: "device",
         deviceId: msg.device_id,

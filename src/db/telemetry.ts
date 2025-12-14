@@ -13,6 +13,12 @@ export async function saveTelemetry(deviceId: string, data: any) {
      VALUES ($1, $2, $3)`,
     [deviceId, data.temp, data.battery]
   );
+}
 
-
+export async function checkDeviceExists(deviceId: string): Promise<boolean> {
+  const result = await pool.query(
+    'SELECT 1 FROM devices WHERE id = $1 LIMIT 1',
+    [deviceId]
+  );
+  return result.rows.length > 0;
 }

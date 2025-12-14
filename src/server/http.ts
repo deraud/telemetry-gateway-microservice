@@ -3,6 +3,7 @@ import { listDevices } from "../db/devicesRepo";
 import { getTelemetryForDevice } from "../db/telemetryQuery";
 import { AppError } from "../error/appError";
 import { handleError } from "../error/errorHandler";
+import { checkDeviceExists } from "../db/telemetry";
 
 export function createHttpServer() {
   const app = express();
@@ -22,17 +23,27 @@ export function createHttpServer() {
     }
   });
 
-  app.get("/devices/:id/telemetry", async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const deviceId = req.params.id;
-      const limit = parseInt(req.query.limit as string) || 50;
+app.get("/devices/:id/telemetry", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const deviceId = req.params.id;
+    const limit = parseInt(req.query.limit as string) || 50;
 
-      const telemetry = await getTelemetryForDevice(deviceId!, limit);
-      res.json(telemetry);
-    } catch (err) {
-      next(err);
+    const deviceExists = await checkDeviceExists(deviceId);
+    if (!deviceExists) {
+      throw new AppError(
+        404,
+        "DEVICE_NOT_FOUND",
+        `Device ${deviceId} not found`,
+        { deviceId }
+      );
     }
-  });
+
+    const telemetry = await getTelemetryForDevice(deviceId, limit);
+    res.json(telemetry);
+  } catch (err) {
+    next(err);
+  }
+});
 
   app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     handleError(err, {
